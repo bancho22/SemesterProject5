@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "babel-preset-latest": "^6.24.1",
     "body-parser": "~1.15.2",
     "chai": "^3.5.0",
     "chai-http": "^3.0.0",
