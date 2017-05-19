@@ -15,17 +15,18 @@ let citiesInfo = []
 
 splitByLines.forEach(line => { // each line corresponds to a city
     let properties = line.split('\t')
-    citiesInfo.push({
-        name: properties[1],
-        location: {
-            latitude: properties[4],
-            longitude: properties[5]
-        }
-    })
-    // properties.forEach(property => {
-    //     console.log(property)
-    // })
-    // console.log('---------------------------------------------------------------')
+    let name = properties[1]
+    let lat = +properties[4]
+    let lon = +properties[5]
+    if(name && !isNaN(lat) && !isNaN(lon)){
+        citiesInfo.push({
+            name: name,
+            location: {
+                latitude: lat,
+                longitude: lon
+            }
+        })
+    }
 })
 
 citiesInfo.forEach(city => {
