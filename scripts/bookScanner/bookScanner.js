@@ -43,13 +43,21 @@ dir.files('scripts/bookScanner/books', (err, bookFiles) => {
             let book = fs.readFileSync(fileName).toString().replace(/[\n\r]/g, ' ')
             let wordsInBook = book.split(' ')
 
-            mongo.get().collection('books').insertOne({
+            let dbEntry = {
                 author: bookAuthor(wordsInBook),
                 title: bookTitle(wordsInBook),
                 citiesMentioned: matchingCitiesInBook(citiesByNameId, book)
-            }, (err, r) => {
-                if(err) errorsTotal++
-                insertedTotal += r.insertedCount
+            }
+
+            mongo.get().collection('books').insertOne(dbEntry, (err, r) => {
+                if(err){
+                    errorsTotal++
+                }
+                else{
+                    insertedTotal += r.insertedCount
+                    console.log('book', insertedTotal, 'inserted:', dbEntry.title)
+                }
+
                 if(errorsTotal + insertedTotal === bookFiles.length){
                     console.log('insertedTotal:', insertedTotal, '\nerrorsTotal', errorsTotal)
                     console.log('closing mongo connection...')
