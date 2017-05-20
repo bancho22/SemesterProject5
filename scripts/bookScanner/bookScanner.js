@@ -5,11 +5,10 @@ import dir from 'node-dir'
 import cityGetter from './cityGetter'
 
 
-const matchingCitiesInBook = (cities, wordsInBook) => {
+const matchingCitiesInBook = (cities, book) => {
+    console.log('in matchingCitiesInBook()')
     return cities.filter(({name}) => {
-        return wordsInBook.some(word => {
-            return word === name
-        })
+        return book.includes(name)
     })
 }
 
@@ -38,16 +37,19 @@ dir.files('scripts/bookScanner/books', (err, bookFiles) => {
     cityGetter(citiesByNameId => {
         console.log('cities num', citiesByNameId.length)
 
+        console.time('creating entries')
         let dbEntries = bookFiles.map(fileName => {
-            let book = fs.readFileSync(fileName).toString()
-            let wordsInBook = book.replace(/[\n\r]/g, ' ').split(' ')
+            let book = fs.readFileSync(fileName).toString().replace(/[\n\r]/g, ' ')
+            let wordsInBook = book.split(' ')
 
             return {
                 author: bookAuthor(wordsInBook),
                 title: bookTitle(wordsInBook),
-                citiesMentioned: matchingCitiesInBook(citiesByNameId, wordsInBook)
+                citiesMentioned: matchingCitiesInBook(citiesByNameId, book)
             }
         })
+
+        console.timeEnd('creating entries')
 
         dbEntries.forEach(e => console.log(e))
     })
