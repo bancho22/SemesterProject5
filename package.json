@@ -19,6 +19,7 @@
     "serve-favicon": "~2.3.0"
   },
   "devDependencies": {
-    "jsonfile": "^3.0.0"
+    "jsonfile": "^3.0.0",
+    "node-dir": "^0.1.16"
   }
 }

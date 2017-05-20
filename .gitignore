@@ -1,5 +1,6 @@
 node_modules
 remote
-scripts/cities15000.txt
-scripts/exampleBook.txt
+scripts/cityScanner/cities15000.txt
+scripts/bookScanner/books
+scripts/mongo/cityMongoImport.json
 miscellaneous

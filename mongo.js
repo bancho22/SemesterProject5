@@ -16,8 +16,8 @@ function connect(prod) {
         mongoUser = 'back-end'
         mongoPassword = 'neverKeepYourPasswordsInPlainTextKids'
         mongoUrl = `mongodb://${mongoUser}:${mongoPassword}@ds013916.mlab.com:13916/sem-project-5`
-        
-        console.log('Connecting to', mongoUrl)
+
+        // console.log('Connecting to', mongoUrl)
 
         MongoClient.connect(mongoUrl, (err, mongo) => {
             if (err) {
