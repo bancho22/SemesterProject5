@@ -1,9 +1,10 @@
 'use strict'
 
 import fs from 'fs'
+import jsonfile from 'jsonfile'
 // const fs = require('fs') // syntax prior to es6
 
-let fileInput = fs.readFileSync('scripts/cities15000.txt').toString()
+let fileInput = fs.readFileSync('scripts/cityScanner/cities15000.txt').toString()
 let splitByLines = fileInput.split('\n')
 
 // city properties index cheat sheet
@@ -29,8 +30,24 @@ splitByLines.forEach(line => { // each line corresponds to a city
     }
 })
 
-citiesInfo.forEach(city => {
-    console.log(city)
-})
+// citiesInfo.forEach(city => {
+//     console.log(city)
+// })
 
 console.log('total number of cities', citiesInfo.length)
+
+// let cityNames = citiesInfo.map(cityInfo => cityInfo.name)
+
+// fs.writeFileSync('scripts/bookScanner/cityNames.txt', cityNames)
+
+let cityMongoImport = citiesInfo.map(({name, location}) => ({
+    name: name,
+    location: { //GeoJson Object
+        type: 'Point',
+        coordinates: [location.longitude, location.latitude]
+    }
+}))
+
+jsonfile.writeFile('scripts/mongo/cityMongoImport.json', cityMongoImport, {spaces: 2}, err => {
+    if(err) console.log(err)
+})
