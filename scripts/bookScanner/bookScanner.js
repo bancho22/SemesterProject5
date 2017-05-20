@@ -3,13 +3,13 @@
 import fs from 'fs'
 import dir from 'node-dir'
 import cityGetter from './cityGetter'
+import * as mongo from '../../mongo'
 
 
 const matchingCitiesInBook = (cities, book) => {
-    console.log('in matchingCitiesInBook()')
     return cities.filter(({name}) => {
         return book.includes(name)
-    })
+    }).map(({_id}) => _id)
 }
 
 
@@ -30,6 +30,8 @@ const bookTitle = (wordsInBook) => {
     }, '').trim()
 }
 
+let insertedTotal = 0
+let errorsTotal = 0
 
 dir.files('scripts/bookScanner/books', (err, bookFiles) => {
     console.log('bookFiles num', bookFiles.length)
@@ -37,20 +39,31 @@ dir.files('scripts/bookScanner/books', (err, bookFiles) => {
     cityGetter(citiesByNameId => {
         console.log('cities num', citiesByNameId.length)
 
-        console.time('creating entries')
-        let dbEntries = bookFiles.map(fileName => {
+        bookFiles.map(fileName => {
             let book = fs.readFileSync(fileName).toString().replace(/[\n\r]/g, ' ')
             let wordsInBook = book.split(' ')
 
-            return {
+            mongo.get().collection('books').insertOne({
                 author: bookAuthor(wordsInBook),
                 title: bookTitle(wordsInBook),
                 citiesMentioned: matchingCitiesInBook(citiesByNameId, book)
-            }
+            }, (err, r) => {
+                if(err) errorsTotal++
+                insertedTotal += r.insertedCount
+                if(errorsTotal + insertedTotal === bookFiles.length){
+                    console.log('insertedTotal:', insertedTotal, '\nerrorsTotal', errorsTotal)
+                    console.log('closing mongo connection...')
+                    mongo.close()
+                        .then(() => {
+                            console.log('Bye...')
+                            process.exit(0)
+                        })
+                        .catch(err => {
+                            console.log('Could not close connection', err.toString())
+                            process.exit(1)
+                        })
+                }
+            })
         })
-
-        console.timeEnd('creating entries')
-
-        dbEntries.forEach(e => console.log(e))
     })
 })
