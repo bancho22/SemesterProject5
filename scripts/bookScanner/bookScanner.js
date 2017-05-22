@@ -15,7 +15,7 @@ const matchingCitiesInBook = (cities, book) => {
 
 const bookAuthor = (wordsInBook) => {
     let authorIndexStart = wordsInBook.findIndex(word => word === 'Author:') + 1
-    let authorIndexEnd = wordsInBook.findIndex(word => word === 'Illustrator:')
+    let authorIndexEnd = authorIndexStart + 2
     return wordsInBook.slice(authorIndexStart, authorIndexEnd).reduce((authorName, partOfName) => {
         return authorName += partOfName + ' '
     }, '').trim()
