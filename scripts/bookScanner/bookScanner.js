@@ -39,58 +39,32 @@ dir.files('scripts/bookScanner/books', (err, bookFiles) => {
     cityGetter(citiesByNameId => {
         console.log('cities num', citiesByNameId.length)
 
-        let timesPerBook = []
-
         let dbEntries = bookFiles.map(fileName => {
-            // if(fs.statSync(fileName).size > 30000) return {}
             let book = fs.readFileSync(fileName).toString()
             let linesInBook = book.split('\n')
             let wordsInBook = book.replace(/[\n\r]/g, ' ').split(' ')
 
-	        let timeStart = new Date().getTime()
+	        console.log(fileName, 'in processing')
 
-            let dbEntry = {
+            return {
                 author: bookAuthor(linesInBook),
                 title: bookTitle(linesInBook),
                 citiesMentioned: matchingCitiesInBook(citiesByNameId, book)
             }
-
-            let timeEnd = new Date().getTime()
-            let timeElapsed = (timeEnd - timeStart) / 1000 //in seconds
-            timesPerBook.push(timeElapsed)
-            let totalTime = timesPerBook.reduce((total, time) => {
-                return total += time
-            }, 0)
-
-            // console.log('timeElapsed', timeElapsed, 's for', fs.statSync(fileName).size, 'bytes')
-            console.log('timeElapsed', timeElapsed, 's for', book.length, 'chars')
-            console.log('avgPerBook so far', totalTime / timesPerBook.length, 's\n')
-
-            return dbEntry
         })
-
-	    // dbEntries.forEach(e => {console.log(e.title, 'by', e.author, '\n')})
-
 
         console.log('dbEntries.length before filter', dbEntries.length)
+        dbEntries = dbEntries.filter(({author}, {title}) => {return !(!author && !title)}) // to this day cannot understand why (author && title) won't work'
+        console.log('dbEntries.length after filter', dbEntries.length, '\n')
 
-        let output = dbEntries.filter(({author}, {title}) => {
-            return !(!author && !title) // to this day cannot understand why (author && title) won't work'
+        mongo.get().collection('books').insertMany(dbEntries, (err, r) => {
+            if(err){
+                console.log(err)
+                process.exit(1)
+            }
+            console.log(r)
+            process.exit(0)
         })
-
-        console.log('output.length after filter', output.length, '\n')
-
-        //output.forEach(e => {console.log(e.title, 'by', e.author, '\n')})
-
-        process.exit(0)
-        // mongo.get().collection('books').insertMany(output, (err, r) => {
-        //     if(err){
-        //         console.log(err)
-        //         process.exit(1)
-        //     }
-        //     console.log(r)
-        //     process.exit(0)
-        // })
 
     })
 })
