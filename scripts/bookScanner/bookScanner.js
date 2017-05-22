@@ -39,58 +39,58 @@ dir.files('scripts/bookScanner/books', (err, bookFiles) => {
     cityGetter(citiesByNameId => {
         console.log('cities num', citiesByNameId.length)
 
+        let timesPerBook = []
+
         let dbEntries = bookFiles.map(fileName => {
+            // if(fs.statSync(fileName).size > 30000) return {}
             let book = fs.readFileSync(fileName).toString()
             let linesInBook = book.split('\n')
             let wordsInBook = book.replace(/[\n\r]/g, ' ').split(' ')
 
-	        console.log(fileName, 'in processing')
+	        let timeStart = new Date().getTime()
 
-            return {
+            let dbEntry = {
                 author: bookAuthor(linesInBook),
                 title: bookTitle(linesInBook),
                 citiesMentioned: matchingCitiesInBook(citiesByNameId, book)
             }
 
-            // mongo.get().collection('books').insertOne(dbEntry, (err, r) => {
-            //     if(err){
-            //         errorsTotal++
-            //     }
-            //     else{
-            //         insertedTotal += r.insertedCount
-            //         console.log('book', insertedTotal, 'inserted:', dbEntry.title)
-            //     }
+            let timeEnd = new Date().getTime()
+            let timeElapsed = (timeEnd - timeStart) / 1000 //in seconds
+            timesPerBook.push(timeElapsed)
+            let totalTime = timesPerBook.reduce((total, time) => {
+                return total += time
+            }, 0)
 
-            //     if(errorsTotal + insertedTotal === bookFiles.length){
-            //         console.log('insertedTotal:', insertedTotal, '\nerrorsTotal', errorsTotal)
-            //         console.log('closing mongo connection...')
-            //         mongo.close()
-            //             .then(() => {
-            //                 console.log('Bye...')
-            //                 process.exit(0)
-            //             })
-            //             .catch(err => {
-            //                 console.log('Could not close connection', err.toString())
-            //                 process.exit(1)
-            //             })
-            //     }
-            // })
+            // console.log('timeElapsed', timeElapsed, 's for', fs.statSync(fileName).size, 'bytes')
+            console.log('timeElapsed', timeElapsed, 's for', book.length, 'chars')
+            console.log('avgPerBook so far', totalTime / timesPerBook.length, 's\n')
+
+            return dbEntry
         })
 
-	    // dbEntries.forEach(e => {console.log(e.title, 'by', e.author)})
+	    // dbEntries.forEach(e => {console.log(e.title, 'by', e.author, '\n')})
+
 
         console.log('dbEntries.length before filter', dbEntries.length)
-        dbEntries = dbEntries.filter(({author}, {title}) => {!(!author && !title)}) // to this day cannot understand why (author && title) won't work'
-        console.log('dbEntries.length after filter', dbEntries.length, '\n')
 
-        mongo.get().collection('books').insertMany(dbEntries, (err, r) => {
-            if(err){
-                console.log(err)
-                process.exit(1)
-            }
-            console.log(r)
-            process.exit(0)
+        let output = dbEntries.filter(({author}, {title}) => {
+            return !(!author && !title) // to this day cannot understand why (author && title) won't work'
         })
+
+        console.log('output.length after filter', output.length, '\n')
+
+        //output.forEach(e => {console.log(e.title, 'by', e.author, '\n')})
+
+        process.exit(0)
+        // mongo.get().collection('books').insertMany(output, (err, r) => {
+        //     if(err){
+        //         console.log(err)
+        //         process.exit(1)
+        //     }
+        //     console.log(r)
+        //     process.exit(0)
+        // })
 
     })
 })
