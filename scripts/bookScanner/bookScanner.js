@@ -13,20 +13,22 @@ const matchingCitiesInBook = (cities, book) => {
 }
 
 
-const bookAuthor = (wordsInBook) => {
-    let authorIndexStart = wordsInBook.findIndex(word => word === 'Author:') + 1
-    let authorIndexEnd = authorIndexStart + 2
-    return wordsInBook.slice(authorIndexStart, authorIndexEnd).reduce((authorName, partOfName) => {
-        return authorName += partOfName + ' '
+const bookAuthor = (linesInBook) => {
+    const authorLineIndex = linesInBook.findIndex(line => line.includes('Author:'))
+    if(!linesInBook[authorLineIndex]) return undefined
+    return linesInBook[authorLineIndex].split(' ').reduce((title, word) => {
+        const partOfName = word !== 'Author:'
+        return title += partOfName ? word + ' ' : ''
     }, '').trim()
 }
 
 
-const bookTitle = (wordsInBook) => {
-    let titleIndexStart = wordsInBook.findIndex(word => word === 'Title:') + 1
-    let titleIndexEnd = wordsInBook.findIndex(word => word === 'Author:')
-    return wordsInBook.slice(titleIndexStart, titleIndexEnd).reduce((title, word) => {
-        return title += word + ' '
+const bookTitle = (linesInBook) => {
+    const titleLineIndex = linesInBook.findIndex(line => line.includes('Title:'))
+    if(!linesInBook[titleLineIndex]) return undefined
+    return linesInBook[titleLineIndex].split(' ').reduce((title, word) => {
+        const partOfTitle = word !== 'Title:'
+        return title += partOfTitle ? word + ' ' : ''
     }, '').trim()
 }
 
@@ -40,12 +42,13 @@ dir.files('scripts/bookScanner/books', (err, bookFiles) => {
         console.log('cities num', citiesByNameId.length)
 
         bookFiles.map(fileName => {
-            let book = fs.readFileSync(fileName).toString().replace(/[\n\r]/g, ' ')
-            let wordsInBook = book.split(' ')
+            let book = fs.readFileSync(fileName).toString()
+            let linesInBook = book.split('\n')
+            let wordsInBook = book.replace(/[\n\r]/g, ' ').split(' ')
 
             let dbEntry = {
-                author: bookAuthor(wordsInBook),
-                title: bookTitle(wordsInBook),
+                author: bookAuthor(linesInBook),
+                title: bookTitle(linesInBook),
                 citiesMentioned: matchingCitiesInBook(citiesByNameId, book)
             }
 
