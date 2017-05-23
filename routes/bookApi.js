@@ -16,7 +16,7 @@ router.get('/books/by-city/:cityName', (req, res, next) => {
 })
 
 
-router.get('cities/by-book/:bookTitle', (req, res, next) => {
+router.get('/cities/by-book/:bookTitle', (req, res, next) => {
     let bookTitle = req.params.bookTitle
     mongoDB.getCitiesByBook(bookTitle)
         .then(cities => {

@@ -1,99 +1,75 @@
-// const chai = require('chai')
-// const chaiHttp = require('chai-http')
+const chai = require('chai')
+const chaiHttp = require('chai-http')
 
-// chai.use(chaiHttp)
-// const should = chai.should()
+chai.use(chaiHttp)
+const should = chai.should()
 
-// describe('getByCity', () => {
+describe('REST API Backed by Mongo', () => {
 
-//     it('should list items on GET', done => {
-//         chai.request('http://localhost:3000')
-//             .get('/api/books/by-city')
-//             .end((err, res) => {
-//                 should.equal(err, null)
-//                 res.should.have.status(200)
-//                 res.body.should.be.a('array')
-//                 res.body.forEach(entry => {
-//                     entry.should.be.a('object')
-//                     entry.should.have.property('author')
-//                     entry.should.have.property('title')
-//                     entry.author.should.be.a('string')
-//                     entry.title.should.be.a('string')
-//                 })
+    it('should respond with the correct schema', done => {
+        chai.request('http://localhost:3000')
+            .get('/api/books/by-city/Sofia')
+            .end((err, res) => {
+                should.equal(err, null)
+                res.should.have.status(200)
+                res.body.should.be.a('array')
+                res.body.forEach(entry => {
+                    entry.should.be.a('object')
+                    entry.should.have.property('author')
+                    entry.should.have.property('title')
+                    entry.author.should.be.a('string')
+                    entry.title.should.be.a('string')
+                })
 
-//                 done()
-//             })
-//     })
-// })
+                done()
+            })
+    })
 
+    // it('should respond with the correct schema', done => {
+    //     chai.request('http://localhost:3000')
+    //         .get('/api/cities/by-book/Measles')
+    //         .end((err, res) => {
+    //             should.equal(err, null)
+    //             res.should.have.status(200)
+    //             res.body.should.be.a('array')
+    //             res.body.forEach(entry => {
+    //                 entry.should.be.a('string')                                      
+    //             })
 
-
-// describe('getCitiesByBook', () => {
-
-//     it('should list items on GET', done => {
-//         chai.request('http://localhost:3000')
-//             .get('/api/books/by-bookTitle')
-//             .end((err, res) => {
-//                 should.equal(err, null)
-//                 res.should.have.status(200)
-//                 res.body.should.be.a('array')
-//                 res.body.forEach(entry => {
-//                     entry.should.be.a('string')                                      
-//                 })
-
-//                 done()
-//             })
-//     })
-// })
+    //             done()
+    //         })
+    // })
 
 
+    it('should respond with the correct schema', done => {
+        chai.request('http://localhost:3000')
+            .get('/api/books/by-author/Anonymous')
+            .end((err, res) => {
+                should.equal(err, null)
+                res.should.have.status(200)
+                res.body.should.be.a('array')
+                res.body.forEach(entry => {
+                    entry.should.be.a('string')
+                })
 
-// describe('getCitiesByBook', () => {
-
-//     it('should list items on GET', done => {
-//         chai.request('http://localhost:3000')
-//             .get('/api/books/by-authorName')
-//             .end((err, res) => {
-//                 should.equal(err, null)
-//                 res.should.have.status(200)
-//                 res.body.should.be.a('array')
-//                 res.body.forEach(entry => {
-//                     entry.should.be.a('object')
-//                     entry.should.have.property('title')
-//                     entry.title.should.be.a('string')
-//                     entry.should.have.property('citiesMentioned')
-//                     entry.citiesMentioned.should.be.a('array')
-//                     entry.citiesMentioned.forEach(city => {
-//                         city.should.be.a('string')
-//                     })
-//                 })
-
-//                 done()
-//             })
-//     })
-// })
+                done()
+            })
+    })
 
 
+    it('should respond with the correct schema', done => {
+        chai.request('http://localhost:3000')
+            .get('/api/books/by-geo/55/12/100')
+            .end((err, res) => {
+                should.equal(err, null)
+                res.should.have.status(200)
+                res.body.should.be.a('array')
+                res.body.forEach(entry => {
+                    entry.should.be.a('string')                  
+                })
 
-// describe('getBooksAndCitiesByGeoLocation', () => {
+                done()
+            })
+    })
 
-//     it('should list items on GET', done => {
-//         chai.request('http://localhost:3000')
-//             .get('/api/books/by-geoLocation')
-//             .end((err, res) => {
-//                 should.equal(err, null)
-//                 res.should.have.status(200)
-//                 res.body.should.be.a('array')
-//                 res.body.forEach(entry => {
-//                     entry.should.be.a('object')
-//                     entry.should.have.property('title')
-//                     entry.title.should.be.a('string')
-//                     entry.should.have.property('city')
-//                     entry.city.should.be.a('string')
-                    
-//                 })
-
-//                 done()
-//             })
-//     })
-// })
+})
