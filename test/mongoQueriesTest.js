@@ -100,6 +100,25 @@ describe('MongoDB queries', () => {
             })
     })
 
+    it('should return all books mentioning a city in vicinity of the given geolocation', done => {
+        db.getBooksByGeoLocation({lat: 25, lon: 55}, 100)
+            .then(books => {
+                books.should.be.a('array')
+                books.should.have.length(2)
+                books.map(book => {
+                    book.should.be.a('string')
+                    if(!(book === 'The Story of Miss Moppet' || book === 'The Tale of Mrs. Tiggy-Winkle')){
+                        throw new Error()
+                    }
+                })
+                done()
+            })
+            .catch(err => {
+                assert.fail(err, 'not an err')
+                done()
+            })
+    })
+
     after((done) => {
         disconnect()
             .then(() => {

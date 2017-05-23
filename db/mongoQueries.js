@@ -58,6 +58,8 @@ module.exports = (test) => {
             })
         },
 
+
+
         getCitiesByBook: bookTitle => {
             return new Promise((resolve, reject) => {
                 getConn().collection(books_col).find({title: bookTitle}).toArray()
@@ -82,6 +84,8 @@ module.exports = (test) => {
             })
         },
 
+
+
         getBooksByAuthor: bookAuthor => {
             return new Promise((resolve, reject) => {
                 getConn().collection(books_col).find({author: bookAuthor}).toArray()
@@ -98,6 +102,8 @@ module.exports = (test) => {
                     })
             })
         },
+
+
 
         getCitiesByAuthor: bookAuthor => {
             return new Promise((resolve, reject) => {
@@ -119,6 +125,53 @@ module.exports = (test) => {
                                 })
                         }else{
                             return reject('No books found')
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                        return reject(err)
+                    })
+            })
+        },
+
+
+
+        getBooksByGeoLocation: (loc, radius) => {
+            return new Promise((resolve, reject) => {
+                getConn().collection(cities_col).find({
+                    location: {
+                        $near: {
+                            $geometry: {
+                                type: 'Point',
+                                coordinates: [loc.lon, loc.lat]
+                            },
+                            $maxDistance: radius * 1000 // radius (km -> m)
+                        }
+                    }
+                }).toArray()
+                    .then(res => {
+                        if(res && res.length > 0){
+                            let cityIds = res.map(city => {
+                                return city._id
+                            })
+                            getConn().collection(books_col).find({
+                                citiesMentioned: {
+                                    '$in': cityIds
+                                }
+                            }).toArray()
+                                .then(res => {
+                                    if(res && res.length > 0){
+                                        return resolve(res.map(book => book.title))
+                                    }else{
+                                        return reject('No books found')
+                                    }
+                                })
+                                .catch(err => {
+                                    console.log(err)
+                                    return reject(err)
+                                })
+                        }else{
+                            return reject('No cities found')
                         }
                     })
                     .catch(err => {
