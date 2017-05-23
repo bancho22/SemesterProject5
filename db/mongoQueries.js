@@ -9,7 +9,27 @@ module.exports = (test) => {
 
     const books_col = !test ? 'books' : 'books_test'
     const cities_col = !test ? 'cities' : 'cities_test'
+
+
+    const findCitiesByIds = (cityIds) => {
+        return new Promise((resolve, reject) => {
+            getConn().collection(cities_col).find({
+                _id: {
+                    '$in': cityIds
+                }
+            }).toArray()
+                .then(res => {
+                    return resolve(res.map(({name, location}) => ({name, lat: location.coordinates[1], lon: location.coordinates[0]})))
+                })
+                .catch(err => {
+                    console.log(err)
+                    return reject(err)
+                })
+        })
+    }
     
+
+
     return {
 
         getBooksByCity: cityName => {
@@ -44,16 +64,11 @@ module.exports = (test) => {
                     .then(res => {
                         if(res && res[0]){
                             let cityIds = res[0].citiesMentioned
-                            getConn().collection(cities_col).find({
-                                _id: {
-                                    '$in': cityIds
-                                }
-                            }).toArray()
+                            findCitiesByIds(cityIds)
                                 .then(res => {
-                                    return resolve(res.map(({name, location}) => ({name, lat: location.coordinates[1], lon: location.coordinates[0]})))
+                                    return resolve(res)
                                 })
                                 .catch(err => {
-                                    console.log(err)
                                     return reject(err)
                                 })
                         }else{
@@ -71,8 +86,37 @@ module.exports = (test) => {
             return new Promise((resolve, reject) => {
                 getConn().collection(books_col).find({author: bookAuthor}).toArray()
                     .then(res => {
-                        if(res){
+                        if(res && res.length > 0){
                             return resolve(res.map(book => book.title))
+                        }else{
+                            return reject('No books found')
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                        return reject(err)
+                    })
+            })
+        },
+
+        getCitiesByAuthor: bookAuthor => {
+            return new Promise((resolve, reject) => {
+                getConn().collection(books_col).find({author: bookAuthor}).toArray()
+                    .then(res => {
+                        if(res && res.length > 0){
+                            let cityIds = []
+                            res.forEach(book => {
+                                book.citiesMentioned.forEach(cityId => {
+                                    if(!cityIds.includes(cityId)) cityIds.push(cityId)
+                                })
+                            })
+                            findCitiesByIds(cityIds)
+                                .then(res => {
+                                    return resolve(res)
+                                })
+                                .catch(err => {
+                                    return reject(err)
+                                })
                         }else{
                             return reject('No books found')
                         }

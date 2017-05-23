@@ -79,6 +79,27 @@ describe('MongoDB queries', () => {
             })
     })
 
+    it('should return all cities mentioned in any book written by an author', done => {
+        db.getCitiesByAuthor('Beatrix Potter')
+            .then(cities => {
+                cities.should.be.a('array')
+                cities.should.have.length(2)
+                cities.map(city => {
+                    city.should.be.a('object')
+                    if(!(city.name === 'Dubai' || city.name === 'Santa Lucía')){
+                        throw new Error()
+                    }
+                    city.lat.should.be.a('number')
+                    city.lon.should.be.a('number')
+                })
+                done()
+            })
+            .catch(err => {
+                assert.fail(err, 'not an err')
+                done()
+            })
+    })
+
     after((done) => {
         disconnect()
             .then(() => {
