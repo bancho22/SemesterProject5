@@ -56,6 +56,25 @@ module.exports = (test) => {
                                     console.log(err)
                                     return reject(err)
                                 })
+                        }else{
+                            return reject('No cities found')
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                        return reject(err)
+                    })
+            })
+        },
+
+        getBooksByAuthor: bookAuthor => {
+            return new Promise((resolve, reject) => {
+                getConn().collection(books_col).find({author: bookAuthor}).toArray()
+                    .then(res => {
+                        if(res){
+                            return resolve(res.map(book => book.title))
+                        }else{
+                            return reject('No books found')
                         }
                     })
                     .catch(err => {

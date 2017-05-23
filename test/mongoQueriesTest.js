@@ -45,10 +45,31 @@ describe('MongoDB queries', () => {
             .then(cities => {
                 cities.should.be.a('array')
                 cities.should.have.length(2)
-                cities.map(({name, lat, lon}) => {
-                    assert(name === 'Dubai' || name === 'Santa Lucía', '')
-                    lat.should.be.a('number')
-                    lon.should.be.a('number')
+                cities.map(city => {
+                    if(!(city.name === 'Dubai' || city.name === 'Santa Lucía')){
+                        throw new Error()
+                    }
+                    city.lat.should.be.a('number')
+                    city.lon.should.be.a('number')
+                })
+                done()
+            })
+            .catch(err => {
+                assert.fail(err, 'not an err')
+                done()
+            })
+    })
+
+    it('should return all books written by an author', done => {
+        db.getBooksByAuthor('Beatrix Potter')
+            .then(books => {
+                books.should.be.a('array')
+                books.should.have.length(2)
+                books.map(book => {
+                    book.should.be.a('string')
+                    if(!(book === 'The Story of Miss Moppet' || book === 'The Tale of Mrs. Tiggy-Winkle')){
+                        throw new Error()
+                    }
                 })
                 done()
             })
