@@ -40,7 +40,11 @@ module.exports = (test) => {
                             let cityId = res[0]._id
                             getConn().collection(books_col).find({citiesMentioned: cityId}).toArray()
                                 .then(res => {
-                                    return resolve(res.map(({author, title}) => ({author, title})))
+                                    if(res && res.length > 0){
+                                        return resolve(res.map(({author, title}) => ({author, title})))
+                                    }else{
+                                        return resolve([])
+                                    }
                                 })
                                 .catch(err => {
                                     console.log(err)
@@ -68,7 +72,7 @@ module.exports = (test) => {
                             let cityIds = res[0].citiesMentioned
                             findCitiesByIds(cityIds)
                                 .then(res => {
-                                    return resolve(res)
+                                    return resolve(res ? res : [])
                                 })
                                 .catch(err => {
                                     return reject(err)
@@ -93,7 +97,7 @@ module.exports = (test) => {
                         if(res && res.length > 0){
                             return resolve(res.map(book => book.title))
                         }else{
-                            return reject('No books found')
+                            return resolve([])
                         }
                     })
                     .catch(err => {
@@ -163,7 +167,7 @@ module.exports = (test) => {
                                     if(res && res.length > 0){
                                         return resolve(res.map(book => book.title))
                                     }else{
-                                        return reject('No books found')
+                                        return resolve([])
                                     }
                                 })
                                 .catch(err => {
