@@ -1,7 +1,7 @@
 import matplotlib
 from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
-import numpy as np
+#import numpy as np
 import matplotlib.cm as cm
 import Image
 import json
