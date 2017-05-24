@@ -32,7 +32,6 @@ router.get('/cities/by-book/:bookTitle', (req, res, next) => {
                 exec(cmd, (error, stdout, stderr) => {
                     if (error){
                         console.log(error)
-                        return res.status(500).json({err: 'We are currently experiencing issues with our services.'})
                     }
                 })
                 let link = `http:localhost:3000/images/${imgId}.png` //TODO: fix domain
@@ -71,7 +70,6 @@ router.get('/cities/by-author/:author', (req, res, next) => {
                 exec(cmd, (error, stdout, stderr) => {
                     if (error){
                         console.log(error)
-                        return res.status(500).json({err: 'We are currently experiencing issues with our services.'})
                     }
                 })
                 let link = `http:localhost:3000/images/${imgId}.png` //TODO: fix domain
