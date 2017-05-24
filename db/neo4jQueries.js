@@ -23,11 +23,10 @@ export const getBookByCity = cityName => {
 
 export const getBooksAndCitiesByAuthorOnMap = author => {
 
-
     return session.run(
 
-       ' Match (b:Book {author:$name})-[:Contains]->(city) Return b.title, city.latitude,city.name, city.longitude',
-       {author: author})
+       'Match (b:Book {author:$name})-[:Contains]->(city) Return city',
+       {name: author})
 
 }
 export const getCitiesByBook = title => {

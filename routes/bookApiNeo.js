@@ -20,9 +20,14 @@ router.get('/cities/by-author/:author', (req, res, next) => {
     let author = req.params.author
     getBooksAndCitiesByAuthorOnMap(author)
         .then(cities => {
-            console.log('cities', cities)
+            let coords = cities.records.map(record => {
+                return {
+                    lat: record._fields[0].properties.latitude,
+                    lon: record._fields[0].properties.longitude
+                }
+            })
             let imgId = uuid.v1()
-            jsonfile.writeFile(`plotting/data/${imgId}.json`, cities, {spaces: 2}, err => {
+            jsonfile.writeFile(`plotting/data/${imgId}.json`, coords, {spaces: 2}, err => {
                 if(err){
                     console.log(err)    
                     return res.status(500).json({err: 'We are currently experiencing issues with our services.'})
