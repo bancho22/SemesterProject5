@@ -48,6 +48,6 @@ let cityMongoImport = citiesInfo.map(({name, location}) => ({
     }
 }))
 
-jsonfile.writeFile('scripts/mongo/cityMongoImport.json', cityMongoImport, {spaces: 2}, err => {
+jsonfile.writeFile('scripts/data/cityMongoImport.json', cityMongoImport, {spaces: 2}, err => {
     if(err) console.log(err)
 })
