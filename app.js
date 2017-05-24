@@ -32,7 +32,7 @@ app.use('/api', bookApi)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found; If waiting for an image, please try again shortly');
+  var err = new Error('Not Found / If waiting for an image, please try again shortly');
   err.status = 404;
   next(err);
 });

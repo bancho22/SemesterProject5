@@ -34,6 +34,6 @@ fig = plt.figure(figsize=(100,80))#100,80
 #m.arcgisimage(service='World_Imagery')
 m.drawcoastlines(linewidth=0.9,color='grey')
 #m.plot(x,y,'o',color='r',s=1)#,alpha=0.5)
-m.scatter(x,y,marker='o',color='#1c9616',s=300.0)
+m.scatter(x,y,marker='o',color='#1c9616',s=1000.0)
 plt.savefig('public/images/' + id + '.png')
 # plt.show()
