@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "babel-node ./bin/www",
-    "test": "mocha --compilers js:babel-core/register --timeout 50000"
+    "test": "mocha --compilers js:babel-core/register --timeout 50000",
+    "performance-test": "babel-node ./performance_test/mongo_vs_neo4j.js"
   },
   "dependencies": {
     "babel-preset-latest": "^6.24.1",
