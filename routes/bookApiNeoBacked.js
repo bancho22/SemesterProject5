@@ -3,7 +3,8 @@ var router = express.Router()
 
 import { 
     getBookByCity,
-    getBooksAndCitiesByAuthorOnMap,
+    getCitiesByAuthor,
+    getBooksByAuthor,
     getCitiesByBook,
     getCitiesinVicinity 
 } from '../db/neo4jQueries'
@@ -28,7 +29,7 @@ router.get('/books/by-city/:cityName', (req, res, next) => {
 
 router.get('/cities/by-author/:author', (req, res, next) => {
     let author = req.params.author
-    getBooksAndCitiesByAuthorOnMap(author)
+    getCitiesByAuthor(author)
         .then(cities => {
             let coords = cities.records.map(record => {
                 return {
@@ -51,6 +52,20 @@ router.get('/cities/by-author/:author', (req, res, next) => {
                 let link = `http:localhost:3000/images/${imgId}.png` //TODO: fix domain
                 return res.status(202).json({msg: 'Your image will be available soon at: ' + link})
             })
+        })
+        .catch(err => {
+            return res.status(err.includes('No such') ? 404: 500).json(err)
+        })
+})
+
+
+
+router.get('/books/by-author/:author', (req, res, next) => {
+    let author = req.params.author
+    getBooksByAuthor(author)
+        .then(books => {
+            console.log(books)
+            return res.status(200).json(books)
         })
         .catch(err => {
             return res.status(err.includes('No such') ? 404: 500).json(err)
