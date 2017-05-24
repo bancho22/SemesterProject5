@@ -20,6 +20,8 @@ deploy:
     bucket: deploy-bucket-sem-project-5
     local_dir: dpl_cd_upload
     skip_cleanup: true
+    acl: public_read
+    region: eu-west-1
     provider: codedeploy
     access_key_id: "AKIAIO23RSRLNSN6PYLA"
     secret_access_key: "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"
