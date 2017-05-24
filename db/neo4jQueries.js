@@ -34,7 +34,7 @@ export const getCitiesByBook = title => {
 
     return session.run(
 
-       'Match (b:Book {title:$title})-[:Contains]->(city) Return city.latitude,city.longitude, city.name',
+       'Match (b:Book {title:$title})-[:Contains]->(city) Return city',
        {title: title})
 
 }
