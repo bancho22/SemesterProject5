@@ -24,7 +24,7 @@ function connect(prod) {
                 console.log(err)
                 return reject(err)
             }
-            console.log('Mongo connected')
+            // console.log('Mongo connected')
 
             if (!prod) {
                 connection = mongo

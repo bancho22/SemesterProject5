@@ -1,0 +1,22 @@
+books
+{
+    "_id" : ObjectId("5922e933b68cc5677743ac6e"),
+    "author" : "pipi",
+    "title" : "dulgoto chorapche",
+    "mentionedCities" : [ 
+        ObjectId("5922f44ab68cc5677743af51"), 
+        ObjectId("5922f44ab68cc5677743af51")
+    ]
+}
+cities
+{
+    "_id" : ObjectId("5922f44ab68cc5677743af51"),
+    "loc" : {
+        "type" : "Point",
+        "coordinates" : [ 
+            -73.97, 
+            40.77
+        ]
+    },
+    "name" : "Central Park"
+}

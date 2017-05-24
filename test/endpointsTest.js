@@ -4,11 +4,11 @@ const chaiHttp = require('chai-http')
 chai.use(chaiHttp)
 const should = chai.should()
 
-describe('getByCity', () => {
+describe('REST API Backed by Mongo', () => {
 
-    it('should list items on GET', done => {
+    it('should respond with the correct schema', done => {
         chai.request('http://localhost:3000')
-            .get('/api/books/by-city')
+            .get('/api/books/by-city/Sofia')
             .end((err, res) => {
                 should.equal(err, null)
                 res.should.have.status(200)
@@ -24,76 +24,52 @@ describe('getByCity', () => {
                 done()
             })
     })
-})
+
+    // it('should respond with the correct schema', done => {
+    //     chai.request('http://localhost:3000')
+    //         .get('/api/cities/by-book/Measles')
+    //         .end((err, res) => {
+    //             should.equal(err, null)
+    //             res.should.have.status(200)
+    //             res.body.should.be.a('array')
+    //             res.body.forEach(entry => {
+    //                 entry.should.be.a('string')                                      
+    //             })
+
+    //             done()
+    //         })
+    // })
 
 
-
-describe('getCitiesByBook', () => {
-
-    it('should list items on GET', done => {
+    it('should respond with the correct schema', done => {
         chai.request('http://localhost:3000')
-            .get('/api/books/by-bookTitle')
+            .get('/api/books/by-author/Anonymous')
             .end((err, res) => {
                 should.equal(err, null)
                 res.should.have.status(200)
                 res.body.should.be.a('array')
                 res.body.forEach(entry => {
-                    entry.should.be.a('string')                                      
+                    entry.should.be.a('string')
                 })
 
                 done()
             })
     })
-})
 
 
-
-describe('getCitiesByBook', () => {
-
-    it('should list items on GET', done => {
+    it('should respond with the correct schema', done => {
         chai.request('http://localhost:3000')
-            .get('/api/books/by-authorName')
+            .get('/api/books/by-geo/55/12/100')
             .end((err, res) => {
                 should.equal(err, null)
                 res.should.have.status(200)
                 res.body.should.be.a('array')
                 res.body.forEach(entry => {
-                    entry.should.be.a('object')
-                    entry.should.have.property('title')
-                    entry.title.should.be.a('string')
-                    entry.should.have.property('citiesMentioned')
-                    entry.citiesMentioned.should.be.a('array')
-                    entry.citiesMentioned.forEach(city => {
-                        city.should.be.a('string')
-                    })
+                    entry.should.be.a('string')                  
                 })
 
                 done()
             })
     })
-})
 
-
-
-describe('getBooksAndCitiesByGeoLocation', () => {
-
-    it('should list items on GET', done => {
-        chai.request('http://localhost:3000')
-            .get('/api/books/by-geoLocation')
-            .end((err, res) => {
-                should.equal(err, null)
-                res.should.have.status(200)
-                res.body.should.be.a('array')
-                res.body.forEach(entry => {
-                    entry.should.be.a('object')
-                    entry.should.have.property('title')
-                    entry.title.should.be.a('string')
-                    entry.should.have.property('city')
-                    entry.city.should.be.a('string')
-                    
-                })
-
-                done()
-            })
-    })
 })
