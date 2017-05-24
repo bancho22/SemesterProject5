@@ -11,11 +11,15 @@ script:
   - npm test
 deploy:
     - provider: s3
-    ⋮ # rest of S3 deployment for MyApp.zip
+    access_key_id: "AKIAIO23RSRLNSN6PYLA"
+    secret_access_key: "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"
+    bucket: deploy-bucket-sem-project-5
+    skip_cleanup: true
     - provider: codedeploy
     access_key_id: "AKIAIO23RSRLNSN6PYLA"
     secret_access_key: "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"
-    bucket: "deploy-bucket-sem-project-5"
+    bucket: deploy-bucket-sem-project-5
     key: latest/sem-project-5.zip
     application: sem-project-5
     deployment_group: sem-project-5-dep-group
+    region: eu-west-1
