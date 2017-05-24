@@ -13,7 +13,7 @@ cache:
   directories:
     - node_modules
 deploy:
-    provider: s3
+  - provider: s3
     access_key_id: "AKIAIO23RSRLNSN6PYLA"
     secret_access_key: "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"
     bucket: deploy-bucket-sem-project-5
@@ -21,7 +21,7 @@ deploy:
     skip_cleanup: true
     acl: public_read
     region: eu-west-1
-    provider: codedeploy
+  - provider: codedeploy
     access_key_id: "AKIAIO23RSRLNSN6PYLA"
     secret_access_key: "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"
     bucket: deploy-bucket-sem-project-5
