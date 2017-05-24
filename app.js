@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var bookApi = require('./routes/bookApi');
+var bookApiNeo = require('./routes/bookApiNeo');
 
 var app = express();
 
@@ -25,7 +26,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
-app.use('/api', bookApi)
+app.use('/api/mongo', bookApi)
+app.use('/api/neo4j', bookApiNeo)
 
 
 
