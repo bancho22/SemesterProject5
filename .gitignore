@@ -2,9 +2,7 @@ node_modules
 remote
 scripts/cityScanner/cities15000.txt
 scripts/bookScanner/books
-scripts/mongo/cityMongoImport.json
 miscellaneous
 npm-debug.log
 plotting/data
 public/images
-scripts/data

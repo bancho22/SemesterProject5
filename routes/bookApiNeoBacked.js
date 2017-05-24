@@ -1,10 +1,17 @@
 var express = require('express')
 var router = express.Router()
 
+import { 
+    getBookByCity,
+    getBooksAndCitiesByAuthorOnMap,
+    getCitiesByBook,
+    getCitiesinVicinity 
+} from '../db/neo4jQueries'
+
 const jsonfile = require('jsonfile')
 const uuid = require('uuid')
 const exec = require('child_process').exec
-import { getBookByCity, getBooksAndCitiesByAuthorOnMap, getCitiesByBook, getCitiesinVicinity } from '../db/neo4jQueries'
+
 
 router.get('/books/by-city/:cityName', (req, res, next) => {
     let cityName = req.params.cityName
@@ -16,6 +23,9 @@ router.get('/books/by-city/:cityName', (req, res, next) => {
             return res.status(err.includes('No such') ? 404: 500).json(err)
         })
 })
+
+
+
 router.get('/cities/by-author/:author', (req, res, next) => {
     let author = req.params.author
     getBooksAndCitiesByAuthorOnMap(author)
@@ -46,6 +56,9 @@ router.get('/cities/by-author/:author', (req, res, next) => {
             return res.status(err.includes('No such') ? 404: 500).json(err)
         })
 })
+
+
+
 router.get('/books/by-geo/:lat/:lon/:radius', (req, res, next) => {
     let lat, lon, radius
     try {
