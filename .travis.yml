@@ -16,6 +16,8 @@ addons:
   artifacts:
     s3_region: eu-west-1
     bucket: deploy-bucket-sem-project-5
+    access_key_id: "AKIAIO23RSRLNSN6PYLA"
+    secret_access_key: "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"
 cache:
   directories:
     - node_modules
