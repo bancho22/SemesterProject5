@@ -2,6 +2,7 @@ node_modules
 remote
 scripts/cityScanner/cities15000.txt
 scripts/bookScanner/books
+scripts/data
 miscellaneous
 npm-debug.log
 plotting/data
